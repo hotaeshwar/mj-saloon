@@ -3,34 +3,46 @@ import React, { useState, useEffect } from 'react';
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeLink, setActiveLink] = useState('');
+  const [activeLink, setActiveLink] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 50);
 
       const sections = ['home', 'about', 'services', 'packages', 'work', 'contact'];
-      const scrollPosition = window.scrollY + 100;
+      const scrollPosition = window.scrollY + 120;
 
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
           const offsetTop = element.offsetTop;
           const offsetHeight = element.offsetHeight;
-
           if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
             setActiveLink(section);
+            // ✅ Update URL hash without jumping
+            if (window.location.hash !== `#${section}`) {
+              window.history.replaceState(null, '', `#${section}`);
+            }
             break;
           }
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // ✅ Set active from URL hash on load
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      setActiveLink(hash);
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      setActiveLink('home');
+      window.history.replaceState(null, '', '#home');
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -45,17 +57,19 @@ const Navbar = () => {
   ];
 
   const bookingLink = { name: 'Book Your Appointment', href: '#contact', id: 'contact' };
-
   const allNavLinks = [...leftLinks, ...rightLinks, bookingLink];
 
   const handleLinkClick = (id) => {
     setActiveLink(id);
     setIsMobileMenuOpen(false);
+    window.history.replaceState(null, '', `#${id}`);
   };
 
   const handleHomeClick = (e) => {
     e.preventDefault();
     setActiveLink('home');
+    setIsMobileMenuOpen(false);
+    window.history.replaceState(null, '', '#home');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -64,7 +78,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className={`flex justify-between items-center transition-all duration-300 ${isScrolled ? 'h-20 md:h-24' : 'h-24 md:h-28'}`}>
 
-          {/* Left Links — pushed toward center logo */}
+          {/* Left Links */}
           <div className="hidden lg:flex items-center space-x-1 flex-1 justify-end pr-4">
             {leftLinks.map((link) => (
               <a
@@ -78,14 +92,18 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Center Logo - Slightly Bigger */}
+          {/* Center Logo */}
           <div className="flex-shrink-0 flex items-center h-full">
             <a href="#home" className="flex items-center h-full" onClick={handleHomeClick}>
-              <img src="/media/logo.png" alt="MJ Salon Logo" className="h-28 md:h-36 w-auto object-contain transition-all duration-300" />
+              <img
+                src="/media/logo.png"
+                alt="MJ Salon Logo"
+                className="h-28 md:h-36 w-auto object-contain transition-all duration-300"
+              />
             </a>
           </div>
 
-          {/* Right Links + Book Appointment Tab — pushed toward center logo */}
+          {/* Right Links + Book Appointment */}
           <div className="hidden lg:flex items-center space-x-1 flex-1 justify-start pl-4">
             {rightLinks.map((link) => (
               <a
@@ -98,7 +116,6 @@ const Navbar = () => {
               </a>
             ))}
 
-            {/* Book Your Appointment — styled as a distinct tab */}
             <a
               href={bookingLink.href}
               onClick={() => handleLinkClick(bookingLink.id)}
@@ -133,6 +150,14 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div className={`lg:hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
         <div className="px-4 pt-2 pb-4 space-y-1 bg-[#3e3631] shadow-lg">
+          {/* Home link in mobile menu */}
+          <a
+            href="#home"
+            onClick={handleHomeClick}
+            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'home' ? 'bg-[#ad9b80]' : ''}`}
+          >
+            Home
+          </a>
           {allNavLinks.map((link) => (
             <a
               key={link.id}
