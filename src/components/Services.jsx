@@ -7,173 +7,219 @@ export default function Services() {
   const [visibleServices, setVisibleServices] = useState([]);
 
   useEffect(() => {
-    let ticking = false;
+    // ── Header Observer ──
+    const headerObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisibleHeader(true);
+          headerObserver.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (headerRef.current) headerObserver.observe(headerRef.current);
 
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const windowHeight = window.innerHeight;
-
-          // Header visibility
-          if (headerRef.current && !visibleHeader) {
-            const rect = headerRef.current.getBoundingClientRect();
-            if (rect.top < windowHeight * 0.75 && rect.bottom > 0) {
-              setVisibleHeader(true);
-            }
+    // ── Cards Observer ──
+    const cardObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Number(entry.target.dataset.index);
+            setVisibleServices((prev) => [...new Set([...prev, index])]);
+            cardObserver.unobserve(entry.target);
           }
-
-          // Service cards visibility
-          serviceRefs.current.forEach((service, index) => {
-            if (service && !visibleServices.includes(index)) {
-              const rect = service.getBoundingClientRect();
-              if (rect.top < windowHeight * 0.8 && rect.bottom > 0) {
-                setVisibleServices(prev => [...new Set([...prev, index])]);
-              }
-            }
-          });
-
-          ticking = false;
         });
-        ticking = true;
-      }
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+    );
+    serviceRefs.current.forEach((el) => { if (el) cardObserver.observe(el); });
+
+    return () => {
+      headerObserver.disconnect();
+      cardObserver.disconnect();
     };
-
-    // Initial check immediately on mount
-    setTimeout(() => handleScroll(), 100);
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [visibleHeader, visibleServices]);
+  }, []);
 
   const services = [
-    {
-      id: 1,
-      title: "HAIR TREATMENT",
-      image: "/media/hairtreatment.jpg",
-    },
-    {
-      id: 2,
-      title: "MAKEUP",
-      image: "/media/makeup.jpg",
-    },
-    {
-      id: 3,
-      title: "NAIL EXTENSION",
-      image: "/media/nailextension.jpg",
-    },
-    {
-      id: 4,
-      title: "PEDICURE",
-      image: "/media/pedicure.jpg",
-    },
-    {
-      id: 5,
-      title: "FACIAL",
-      image: "/media/facial.jpg",
-    }
+    { id: 1, title: 'HAIR TREATMENT', image: '/media/hairtreatment.jpg' },
+    { id: 2, title: 'MAKEUP',         image: '/media/makeup.jpg'        },
+    { id: 3, title: 'NAIL EXTENSION', image: '/media/nailextension.jpg' },
+    { id: 4, title: 'PEDICURE',       image: '/media/pedicure.jpg'      },
+    { id: 5, title: 'FACIAL',         image: '/media/facial.jpg'        },
   ];
 
   return (
-    <section className="relative overflow-hidden">
-      
-      {/* Hero Header with Chair Background */}
-      <div 
+    <section style={{ position: 'relative', overflow: 'hidden' }}>
+
+      {/* ── Hero Header ── */}
+      <div
         ref={headerRef}
-        className="relative py-12 sm:py-16 lg:py-20 overflow-hidden bg-[#1a1a1a]"
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          backgroundColor: '#1a1a1a',
+          /* ✅ FIX: paddingTop pushes content below fixed navbar (~70px) + breathing room */
+          paddingTop: '110px',
+          paddingBottom: '56px',
+        }}
       >
-        {/* Background Image - chair.jpg */}
-        <div className="absolute inset-0 w-full h-full">
-          <div
-            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat will-change-transform"
-            style={{
-              backgroundImage: 'url(/media/chair.jpg)',
-              filter: 'brightness(0.4)',
-            }}
-          />
+        {/* Background */}
+        <div style={{ position: 'absolute', inset: 0 }}>
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(/media/chair.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'brightness(0.4)',
+          }} />
         </div>
 
-        {/* Header Content */}
-        <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center transition-all duration-700 ease-out will-change-transform ${
-          visibleHeader ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}>
-          <h1 className="font-bold uppercase mb-4 sm:mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#f5f5f5] tracking-[0.2em] leading-none">
+        {/* Header Content — inline styles only, zero Tailwind class toggling */}
+        <div
+          style={{
+            maxWidth: '80rem',
+            margin: '0 auto',
+            padding: '0 1.5rem',
+            position: 'relative',
+            zIndex: 10,
+            textAlign: 'center',
+            opacity: visibleHeader ? 1 : 0,
+            transform: visibleHeader ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
+            willChange: 'opacity, transform',
+          }}
+        >
+          <h1 style={{
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            marginBottom: '1.25rem',
+            fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+            color: '#f5f5f5',
+            letterSpacing: '0.2em',
+            lineHeight: 1,
+          }}>
             SERVICES
           </h1>
-          
-          {/* Decorative line with diamond */}
-          <div className="flex items-center justify-center gap-3 sm:gap-4">
-            <div className="w-12 sm:w-16 h-px bg-[#c4a574]" />
-            <div className="w-2 h-2 bg-[#c4a574] rotate-45" />
-            <div className="w-12 sm:w-16 h-px bg-[#c4a574]" />
+
+          {/* Decorative line + diamond */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
+            <div style={{ width: '60px', height: '1px', backgroundColor: '#c4a574' }} />
+            <div style={{ width: '8px', height: '8px', backgroundColor: '#c4a574', transform: 'rotate(45deg)' }} />
+            <div style={{ width: '60px', height: '1px', backgroundColor: '#c4a574' }} />
           </div>
         </div>
       </div>
 
-      {/* Services Grid with Background.jpg */}
-      <div className="relative py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#0a0a0a]">
-        {/* Background Image - background.jpg */}
-        <div className="absolute inset-0 w-full h-full">
-          <div
-            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat will-change-transform"
-            style={{
-              backgroundImage: 'url(/media/background.jpg)',
-              filter: 'brightness(0.3)',
-            }}
-          />
+      {/* ── Services Grid ── */}
+      <div style={{
+        position: 'relative',
+        overflow: 'hidden',
+        backgroundColor: '#0a0a0a',
+        padding: '4rem 1.5rem',
+      }}>
+        {/* Background */}
+        <div style={{ position: 'absolute', inset: 0 }}>
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(/media/background.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'brightness(0.3)',
+          }} />
         </div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 sm:gap-10 lg:gap-12">
-            {services.map((service, index) => (
-              <div
-                key={service.id}
-                ref={(el) => (serviceRefs.current[index] = el)}
-                className={`transition-all duration-700 ease-out will-change-transform hover:scale-105 hover:-translate-y-2 cursor-pointer ${
-                  visibleServices.includes(index)
-                    ? 'opacity-100 translate-y-0 scale-100'
-                    : 'opacity-0 translate-y-12 scale-95'
-                }`}
-                style={{
-                  transitionDelay: visibleServices.includes(index) ? `${index * 80}ms` : '0ms',
-                }}
-              >
-                {/* Image with L-shaped Corner Brackets */}
-                <div className="relative mb-6 sm:mb-8 group">
-                  
-                  {/* Main Image with Glow */}
-                  <div className="relative aspect-square overflow-hidden rounded-lg shadow-lg group-hover:shadow-[0_0_30px_rgba(196,165,116,0.6)] transition-shadow duration-300">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 will-change-transform"
-                      loading="lazy"
-                    />
-                    
-                    {/* Overlay glow effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-radial from-[#c4a574]/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </div>
-                  
-                  {/* Top-Left L-shaped Corner - Glows on hover */}
-                  <div className="absolute -top-3 sm:-top-4 -left-3 sm:-left-4 w-16 sm:w-20 h-16 sm:h-20 pointer-events-none transition-all duration-300 group-hover:scale-110">
-                    <div className="absolute top-0 left-0 w-full h-0.5 bg-[#c4a574] group-hover:shadow-[0_0_8px_rgba(196,165,116,0.8)] transition-shadow duration-300" />
-                    <div className="absolute top-0 left-0 w-0.5 h-full bg-[#c4a574] group-hover:shadow-[0_0_8px_rgba(196,165,116,0.8)] transition-shadow duration-300" />
+        <div style={{ maxWidth: '80rem', margin: '0 auto', position: 'relative', zIndex: 10 }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '2.5rem',
+          }}>
+            {services.map((service, index) => {
+              const isVisible = visibleServices.includes(index);
+              return (
+                <div
+                  key={service.id}
+                  ref={(el) => (serviceRefs.current[index] = el)}
+                  data-index={index}
+                  className="group"
+                  style={{
+                    cursor: 'pointer',
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(32px) scale(0.96)',
+                    transition: 'opacity 0.45s ease-out, transform 0.45s ease-out',
+                    transitionDelay: isVisible ? `${index * 65}ms` : '0ms',
+                    willChange: 'opacity, transform',
+                  }}
+                >
+                  {/* Image + Corner Brackets */}
+                  <div style={{ position: 'relative', marginBottom: '1.5rem' }} className="group">
+
+                    {/* Image */}
+                    <div style={{
+                      position: 'relative',
+                      aspectRatio: '1 / 1',
+                      overflow: 'hidden',
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                    }}>
+                      <img
+                        src={service.image}
+                        alt={service.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="group-hover:scale-110"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          transition: 'transform 0.5s ease-out',
+                          willChange: 'transform',
+                          display: 'block',
+                        }}
+                      />
+                    </div>
+
+                    {/* Top-Left Corner Bracket */}
+                    <div style={{
+                      position: 'absolute', top: '-14px', left: '-14px',
+                      width: '72px', height: '72px',
+                      pointerEvents: 'none',
+                      transition: 'transform 0.3s ease',
+                    }} className="group-hover:scale-110">
+                      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#c4a574' }} />
+                      <div style={{ position: 'absolute', top: 0, left: 0, width: '2px', height: '100%', backgroundColor: '#c4a574' }} />
+                    </div>
+
+                    {/* Bottom-Right Corner Bracket */}
+                    <div style={{
+                      position: 'absolute', bottom: '-14px', right: '-14px',
+                      width: '72px', height: '72px',
+                      pointerEvents: 'none',
+                      transition: 'transform 0.3s ease',
+                    }} className="group-hover:scale-110">
+                      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: '2px', backgroundColor: '#c4a574' }} />
+                      <div style={{ position: 'absolute', bottom: 0, right: 0, width: '2px', height: '100%', backgroundColor: '#c4a574' }} />
+                    </div>
                   </div>
 
-                  {/* Bottom-Right L-shaped Corner - Glows on hover */}
-                  <div className="absolute -bottom-3 sm:-bottom-4 -right-3 sm:-right-4 w-16 sm:w-20 h-16 sm:h-20 pointer-events-none transition-all duration-300 group-hover:scale-110">
-                    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#c4a574] group-hover:shadow-[0_0_8px_rgba(196,165,116,0.8)] transition-shadow duration-300" />
-                    <div className="absolute bottom-0 right-0 w-0.5 h-full bg-[#c4a574] group-hover:shadow-[0_0_8px_rgba(196,165,116,0.8)] transition-shadow duration-300" />
-                  </div>
-
+                  {/* Title */}
+                  <h3
+                    className="group-hover:text-[#c4a574]"
+                    style={{
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      textAlign: 'center',
+                      fontSize: 'clamp(0.75rem, 1.2vw, 1rem)',
+                      color: '#f5f5f5',
+                      letterSpacing: '0.15em',
+                      transition: 'color 0.3s ease',
+                    }}
+                  >
+                    {service.title}
+                  </h3>
                 </div>
-
-                {/* Title - Glows on hover */}
-                <h3 className="font-bold uppercase text-center text-sm sm:text-base lg:text-lg text-[#f5f5f5] tracking-[0.15em] group-hover:text-[#c4a574] group-hover:drop-shadow-[0_0_8px_rgba(196,165,116,0.8)] transition-all duration-300">
-                  {service.title}
-                </h3>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

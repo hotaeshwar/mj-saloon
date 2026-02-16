@@ -61,7 +61,8 @@ const OurWork = () => {
   return (
     <section
       id="our-work"
-      className="relative w-full py-8 sm:py-12 lg:py-16 overflow-hidden bg-[#1a1a1a]"
+      className="relative w-full overflow-hidden bg-[#1a1a1a]"
+      style={{ paddingTop: '100px', paddingBottom: '48px' }}
     >
       {/* Background Image with Black Overlay */}
       <div className="absolute inset-0 w-full h-full">
@@ -76,7 +77,7 @@ const OurWork = () => {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Section Header - Compact */}
+        {/* Section Header */}
         <div
           ref={headerRef}
           className={`text-center mb-6 sm:mb-8 transition-all duration-1000 ease-out ${
@@ -93,7 +94,7 @@ const OurWork = () => {
           </p>
         </div>
 
-        {/* Carousel Container - Compact */}
+        {/* Carousel Container */}
         <div
           ref={carouselRef}
           className={`relative transition-all duration-1000 ease-out ${
@@ -117,7 +118,7 @@ const OurWork = () => {
                 >
                   <div className="relative mx-auto max-w-sm">
                     <div className="relative group">
-                      {/* Image Container - Compact */}
+                      {/* Image Container */}
                       <div className="relative aspect-[3/4] overflow-hidden rounded-lg">
                         <img
                           src={work.image}
@@ -126,12 +127,13 @@ const OurWork = () => {
                         />
                       </div>
 
-                      {/* L-shaped Corner Brackets - Minimal */}
+                      {/* L-shaped Corner Brackets - Top Left */}
                       <div className="absolute -top-2 -left-2 w-10 h-10 pointer-events-none">
                         <div className="absolute top-0 left-0 w-full h-px bg-[#c4a574]" />
                         <div className="absolute top-0 left-0 w-px h-full bg-[#c4a574]" />
                       </div>
 
+                      {/* L-shaped Corner Brackets - Bottom Right */}
                       <div className="absolute -bottom-2 -right-2 w-10 h-10 pointer-events-none">
                         <div className="absolute bottom-0 left-0 w-full h-px bg-[#c4a574]" />
                         <div className="absolute bottom-0 right-0 w-px h-full bg-[#c4a574]" />
@@ -143,15 +145,15 @@ const OurWork = () => {
             </div>
           </div>
 
-          {/* Dots Navigation - Compact */}
+          {/* Dots Navigation */}
           <div className="flex justify-center gap-1.5 mt-4">
             {workImages.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`transition-all duration-300 rounded-full ${
-                  index === currentSlide 
-                    ? 'w-5 h-1.5 bg-[#c4a574]' 
+                  index === currentSlide
+                    ? 'w-5 h-1.5 bg-[#c4a574]'
                     : 'w-1.5 h-1.5 bg-[#c4a574]/30 hover:bg-[#c4a574]/50'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
