@@ -3,42 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 export default function Services() {
   const headerRef = useRef(null);
   const serviceRefs = useRef([]);
-  const [visibleHeader, setVisibleHeader] = useState(false);
-  const [visibleServices, setVisibleServices] = useState([]);
-
-  useEffect(() => {
-    // ── Header Observer ──
-    const headerObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisibleHeader(true);
-          headerObserver.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (headerRef.current) headerObserver.observe(headerRef.current);
-
-    // ── Cards Observer ──
-    const cardObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const index = Number(entry.target.dataset.index);
-            setVisibleServices((prev) => [...new Set([...prev, index])]);
-            cardObserver.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
-    );
-    serviceRefs.current.forEach((el) => { if (el) cardObserver.observe(el); });
-
-    return () => {
-      headerObserver.disconnect();
-      cardObserver.disconnect();
-    };
-  }, []);
+  const [visibleHeader, setVisibleHeader] = useState(true); // Start as visible
+  const [visibleServices, setVisibleServices] = useState([0, 1, 2, 3, 4]); // All visible immediately
 
   const services = [
     { id: 1, title: 'HAIR TREATMENT', image: '/media/hairtreatment.jpg' },
@@ -47,6 +13,10 @@ export default function Services() {
     { id: 4, title: 'PEDICURE',       image: '/media/pedicure.jpg'      },
     { id: 5, title: 'FACIAL',         image: '/media/facial.jpg'        },
   ];
+
+  useEffect(() => {
+    // Everything visible immediately on mount - no observers needed for initial load
+  }, []);
 
   return (
     <section style={{ position: 'relative', overflow: 'hidden' }}>
@@ -58,7 +28,6 @@ export default function Services() {
           position: 'relative',
           overflow: 'hidden',
           backgroundColor: '#1a1a1a',
-          /* ✅ FIX: paddingTop pushes content below fixed navbar (~70px) + breathing room */
           paddingTop: '110px',
           paddingBottom: '56px',
         }}
@@ -74,7 +43,7 @@ export default function Services() {
           }} />
         </div>
 
-        {/* Header Content — inline styles only, zero Tailwind class toggling */}
+        {/* Header Content */}
         <div
           style={{
             maxWidth: '80rem',
@@ -83,10 +52,8 @@ export default function Services() {
             position: 'relative',
             zIndex: 10,
             textAlign: 'center',
-            opacity: visibleHeader ? 1 : 0,
-            transform: visibleHeader ? 'translateY(0)' : 'translateY(24px)',
-            transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
-            willChange: 'opacity, transform',
+            opacity: 1,
+            transform: 'translateY(0)',
           }}
         >
           <h1 style={{
@@ -135,7 +102,6 @@ export default function Services() {
             gap: '2.5rem',
           }}>
             {services.map((service, index) => {
-              const isVisible = visibleServices.includes(index);
               return (
                 <div
                   key={service.id}
@@ -144,11 +110,8 @@ export default function Services() {
                   className="group"
                   style={{
                     cursor: 'pointer',
-                    opacity: isVisible ? 1 : 0,
-                    transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(32px) scale(0.96)',
-                    transition: 'opacity 0.45s ease-out, transform 0.45s ease-out',
-                    transitionDelay: isVisible ? `${index * 65}ms` : '0ms',
-                    willChange: 'opacity, transform',
+                    opacity: 1,
+                    transform: 'translateY(0) scale(1)',
                   }}
                 >
                   {/* Image + Corner Brackets */}
@@ -165,7 +128,7 @@ export default function Services() {
                       <img
                         src={service.image}
                         alt={service.title}
-                        loading="lazy"
+                        loading="eager"
                         decoding="async"
                         className="group-hover:scale-110"
                         style={{
