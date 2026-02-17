@@ -7,6 +7,10 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
   const [isContactDropdownOpen, setIsContactDropdownOpen] = useState(false);
+  // Mobile submenu states
+  const [isMobileAboutOpen, setIsMobileAboutOpen] = useState(false);
+  const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
+  const [isMobileContactOpen, setIsMobileContactOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,6 +63,10 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
       setIsAboutDropdownOpen(false);
       setIsServicesDropdownOpen(false);
       setIsContactDropdownOpen(false);
+      // Close mobile submenus
+      setIsMobileAboutOpen(false);
+      setIsMobileServicesOpen(false);
+      setIsMobileContactOpen(false);
       
       const element = document.getElementById(id);
       if (element) {
@@ -74,6 +82,9 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     setIsAboutDropdownOpen(false);
     setIsServicesDropdownOpen(false);
     setIsContactDropdownOpen(false);
+    setIsMobileAboutOpen(false);
+    setIsMobileServicesOpen(false);
+    setIsMobileContactOpen(false);
     
     if (showDetailedServices || showTeam || showLocation) {
       onBackToHome();
@@ -89,6 +100,9 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     setIsServicesDropdownOpen(false);
     setIsAboutDropdownOpen(false);
     setIsContactDropdownOpen(false);
+    setIsMobileAboutOpen(false);
+    setIsMobileServicesOpen(false);
+    setIsMobileContactOpen(false);
   };
 
   const handleTeamClick = (e) => {
@@ -98,6 +112,9 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     setIsAboutDropdownOpen(false);
     setIsServicesDropdownOpen(false);
     setIsContactDropdownOpen(false);
+    setIsMobileAboutOpen(false);
+    setIsMobileServicesOpen(false);
+    setIsMobileContactOpen(false);
   };
 
   const handleLocationClick = (e) => {
@@ -107,6 +124,9 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     setIsAboutDropdownOpen(false);
     setIsServicesDropdownOpen(false);
     setIsContactDropdownOpen(false);
+    setIsMobileAboutOpen(false);
+    setIsMobileServicesOpen(false);
+    setIsMobileContactOpen(false);
   };
 
   const toggleAboutDropdown = (e) => {
@@ -131,6 +151,31 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     setIsContactDropdownOpen(!isContactDropdownOpen);
     setIsAboutDropdownOpen(false);
     setIsServicesDropdownOpen(false);
+  };
+
+  // Mobile submenu toggles
+  const toggleMobileAbout = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsMobileAboutOpen(!isMobileAboutOpen);
+    setIsMobileServicesOpen(false);
+    setIsMobileContactOpen(false);
+  };
+
+  const toggleMobileServices = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsMobileServicesOpen(!isMobileServicesOpen);
+    setIsMobileAboutOpen(false);
+    setIsMobileContactOpen(false);
+  };
+
+  const toggleMobileContact = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsMobileContactOpen(!isMobileContactOpen);
+    setIsMobileAboutOpen(false);
+    setIsMobileServicesOpen(false);
   };
 
   // Close dropdowns when clicking outside
@@ -319,7 +364,7 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
       </div>
 
       {/* Mobile Menu */}
-      <div className={`lg:hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+      <div className={`lg:hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-[700px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
         <div className="px-4 pt-2 pb-4 space-y-1 bg-[#3e3631] shadow-lg">
           <a
             href="#home"
@@ -328,34 +373,50 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
           >
             Home
           </a>
-          <a
-            href="#about"
-            onClick={(e) => handleLinkClick('about', e)}
-            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'about' ? 'bg-[#ad9b80]' : ''}`}
-          >
-            About Us
-          </a>
-          <button
-            onClick={handleTeamClick}
-            className="w-full text-left block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] pl-8"
-          >
-            └─ Team
-          </button>
-          <a
-            href="#services"
-            onClick={(e) => handleLinkClick('services', e)}
-            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'services' ? 'bg-[#ad9b80]' : ''}`}
-          >
-            Services
-          </a>
           
-          {/* Mobile Services Submenu - Single "View All Services" link */}
-          <button
-            onClick={handleViewAllServices}
-            className="w-full text-left block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] pl-8 border-t border-[#ad9b80]/30 mt-1 pt-3"
-          >
-            └─ View All Services
-          </button>
+          {/* About Us with Submenu */}
+          <div>
+            <button
+              onClick={toggleMobileAbout}
+              className={`w-full flex items-center justify-between text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'about' ? 'bg-[#ad9b80]' : ''}`}
+            >
+              <span onClick={(e) => { e.stopPropagation(); handleLinkClick('about', e); }}>About Us</span>
+              <svg className={`w-4 h-4 transition-transform duration-300 ${isMobileAboutOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {/* About Submenu with Animation */}
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isMobileAboutOpen ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <button
+                onClick={handleTeamClick}
+                className="w-full text-left block text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-300 hover:bg-[#ad9b80] ml-4 bg-[#2d2621]"
+              >
+                <span className="text-[#ad9b80]">└─</span> Team
+              </button>
+            </div>
+          </div>
+
+          {/* Services with Submenu */}
+          <div>
+            <button
+              onClick={toggleMobileServices}
+              className={`w-full flex items-center justify-between text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'services' ? 'bg-[#ad9b80]' : ''}`}
+            >
+              <span onClick={(e) => { e.stopPropagation(); handleLinkClick('services', e); }}>Services</span>
+              <svg className={`w-4 h-4 transition-transform duration-300 ${isMobileServicesOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {/* Services Submenu with Animation */}
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isMobileServicesOpen ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <button
+                onClick={handleViewAllServices}
+                className="w-full text-left block text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-300 hover:bg-[#ad9b80] ml-4 bg-[#2d2621]"
+              >
+                <span className="text-[#ad9b80]">└─</span> View All Services
+              </button>
+            </div>
+          </div>
 
           <a
             href="#packages"
@@ -371,19 +432,29 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
           >
             Work
           </a>
-          <a
-            href="#contact"
-            onClick={(e) => handleLinkClick('contact', e)}
-            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}
-          >
-            Contact
-          </a>
-          <button
-            onClick={handleLocationClick}
-            className="w-full text-left block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] pl-8"
-          >
-            └─ Location
-          </button>
+          
+          {/* Contact with Submenu */}
+          <div>
+            <button
+              onClick={toggleMobileContact}
+              className={`w-full flex items-center justify-between text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}
+            >
+              <span onClick={(e) => { e.stopPropagation(); handleLinkClick('contact', e); }}>Contact</span>
+              <svg className={`w-4 h-4 transition-transform duration-300 ${isMobileContactOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {/* Contact Submenu with Animation */}
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isMobileContactOpen ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
+              <button
+                onClick={handleLocationClick}
+                className="w-full text-left block text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-300 hover:bg-[#ad9b80] ml-4 bg-[#2d2621]"
+              >
+                <span className="text-[#ad9b80]">└─</span> Location
+              </button>
+            </div>
+          </div>
+
           <a
             href="#contact"
             onClick={(e) => handleLinkClick('contact', e)}
