@@ -23,6 +23,9 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSplash(false);
+      // Ensure we're at #home when splash ends
+      window.scrollTo(0, 0);
+      window.history.replaceState(null, '', '#home');
     }, 2800);
 
     return () => clearTimeout(timer);
@@ -135,13 +138,22 @@ function App() {
       }
     };
 
-    // Set initial hash
-    handleScroll();
+    // Set initial hash to #home when splash screen ends
+    if (!showSplash) {
+      window.history.replaceState(null, '', '#home');
+      
+      // Delay scroll tracking to allow page to settle
+      const scrollTimer = setTimeout(() => {
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+      }, 500);
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [showDetailedServices, showTeam, showLocation]);
+      return () => {
+        clearTimeout(scrollTimer);
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+  }, [showDetailedServices, showTeam, showLocation, showSplash]);
 
   if (showSplash) {
     return (
