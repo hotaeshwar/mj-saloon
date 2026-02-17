@@ -6,10 +6,8 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
   const [activeLink, setActiveLink] = useState('home');
   const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
   const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
-  const [isContactDropdownOpen, setIsContactDropdownOpen] = useState(false);
   const [isMobileAboutOpen, setIsMobileAboutOpen] = useState(false);
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false);
-  const [isMobileContactOpen, setIsMobileContactOpen] = useState(false);
 
   // Ref to the mobile menu DOM node for instant hide
   const mobileMenuRef = useRef(null);
@@ -38,7 +36,6 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     const closeDropdownsOnScroll = () => {
       setIsAboutDropdownOpen(false);
       setIsServicesDropdownOpen(false);
-      setIsContactDropdownOpen(false);
     };
 
     window.addEventListener('scroll', closeDropdownsOnScroll);
@@ -61,7 +58,6 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     setIsMobileMenuOpen(false);
     setIsMobileAboutOpen(false);
     setIsMobileServicesOpen(false);
-    setIsMobileContactOpen(false);
   };
 
   // Restores CSS transitions and opens the menu
@@ -79,7 +75,6 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
   const closeAllDropdowns = () => {
     setIsAboutDropdownOpen(false);
     setIsServicesDropdownOpen(false);
-    setIsContactDropdownOpen(false);
   };
 
   const handleLinkClick = (id, e) => {
@@ -140,7 +135,6 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     e.stopPropagation();
     setIsAboutDropdownOpen(p => !p);
     setIsServicesDropdownOpen(false);
-    setIsContactDropdownOpen(false);
   };
 
   const toggleServicesDropdown = (e) => {
@@ -148,15 +142,6 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     e.stopPropagation();
     setIsServicesDropdownOpen(p => !p);
     setIsAboutDropdownOpen(false);
-    setIsContactDropdownOpen(false);
-  };
-
-  const toggleContactDropdown = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsContactDropdownOpen(p => !p);
-    setIsAboutDropdownOpen(false);
-    setIsServicesDropdownOpen(false);
   };
 
   const toggleMobileAbout = (e) => {
@@ -164,7 +149,6 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     e.stopPropagation();
     setIsMobileAboutOpen(p => !p);
     setIsMobileServicesOpen(false);
-    setIsMobileContactOpen(false);
   };
 
   const toggleMobileServices = (e) => {
@@ -172,15 +156,6 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
     e.stopPropagation();
     setIsMobileServicesOpen(p => !p);
     setIsMobileAboutOpen(false);
-    setIsMobileContactOpen(false);
-  };
-
-  const toggleMobileContact = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsMobileContactOpen(p => !p);
-    setIsMobileAboutOpen(false);
-    setIsMobileServicesOpen(false);
   };
 
   useEffect(() => {
@@ -269,29 +244,10 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
               Work
             </a>
 
-            <div className="relative dropdown-container">
-              <div className="flex items-center">
-                <a href="#contact" onClick={(e) => handleLinkClick('contact', e)}
-                  className={`text-white px-4 py-2 rounded-l-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}>
-                  Contact
-                </a>
-                <button onClick={toggleContactDropdown}
-                  className={`text-white px-2 py-2 rounded-r-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] border-l border-[#ad9b80]/30 ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}
-                  aria-label="Toggle dropdown">
-                  <svg className={`w-4 h-4 transition-transform duration-300 ${isContactDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-              </div>
-              {isContactDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-[#3e3631] rounded-lg shadow-xl border border-[#ad9b80]/20 overflow-hidden">
-                  <button onClick={handleLocationClick}
-                    className="w-full text-left block px-4 py-3 text-white text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80]">
-                    Location
-                  </button>
-                </div>
-              )}
-            </div>
+            <a href="#location" onClick={handleLocationClick}
+              className={`text-white px-4 py-2 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${showLocation ? 'bg-[#ad9b80]' : ''}`}>
+              Location
+            </a>
 
             <a href="#contact" onClick={(e) => handleLinkClick('contact', e)}
               className={`text-white px-4 py-1.5 rounded-lg text-sm font-medium border-2 border-[#ad9b80] transition-all duration-300 hover:bg-[#ad9b80] hover:border-[#ad9b80] ml-3 ${activeLink === 'contact' ? 'bg-[#ad9b80] border-[#ad9b80]' : ''}`}>
@@ -376,22 +332,11 @@ const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetail
             Work
           </a>
 
-          {/* Contact */}
-          <div>
-            <button onClick={toggleMobileContact}
-              className={`w-full flex items-center justify-between text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}>
-              <span onClick={(e) => { e.stopPropagation(); handleLinkClick('contact', e); }}>Contact</span>
-              <svg className={`w-4 h-4 transition-transform duration-300 ${isMobileContactOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isMobileContactOpen ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
-              <button onClick={handleLocationClick}
-                className="w-full text-left block text-white px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-300 hover:bg-[#ad9b80] ml-4 bg-[#2d2621]">
-                <span className="text-[#ad9b80]">└─</span> Location
-              </button>
-            </div>
-          </div>
+          {/* Location — direct link, no submenu */}
+          <a href="#location" onClick={handleLocationClick}
+            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${showLocation ? 'bg-[#ad9b80]' : ''}`}>
+            Location
+          </a>
 
           <a href="#contact" onClick={(e) => handleLinkClick('contact', e)}
             className={`block text-white px-4 py-3 rounded-lg text-base font-medium border-2 border-[#ad9b80] transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}>
