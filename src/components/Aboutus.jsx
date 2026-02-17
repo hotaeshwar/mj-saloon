@@ -93,7 +93,7 @@ const AboutUs = () => {
             <div className="relative w-full max-w-md lg:max-w-lg">
               <img
                 src="/media/aboutus.png"
-                alt="MJ Salon by Mohit & Jatin - Premier Unisex Salon in Kalka JI"
+                alt="MJ Salon by Mohit & Jatin - Premier Unisex Salon in Delhi and Abohar"
                 className="w-full h-auto object-cover transform transition-transform duration-500 hover:scale-105"
                 style={{
                   borderRadius: '1rem',
@@ -139,8 +139,9 @@ const AboutUs = () => {
                   transitionDelay: '400ms',
                 }}
               >
-                <strong style={{ color: '#c4a574' }}>MJ Salon by Mohit & Jatin</strong> is a premier unisex salon located in{' '}
-                <strong style={{ color: '#c4a574' }}>Kalka JI</strong>, offering top-notch beauty, hair, nails, and makeup services.
+                <strong style={{ color: '#c4a574' }}>MJ Salon by Mohit & Jatin</strong> is a premier unisex salon with locations in{' '}
+                <strong style={{ color: '#c4a574' }}>Alaknanda (South Delhi)</strong>, <strong style={{ color: '#c4a574' }}>Kalkaji (New Delhi)</strong>, and{' '}
+                <strong style={{ color: '#c4a574' }}>Abohar (Punjab)</strong>, offering top-notch beauty, hair, nails, and makeup services.
               </p>
 
               <p
