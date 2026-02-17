@@ -1,61 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 
 const ContactUs = () => {
-  const [visibleHeader, setVisibleHeader] = useState(false);
-  const [visibleForm, setVisibleForm] = useState(false);
-
-  const headerRef = useRef(null);
-  const formRef = useRef(null);
-
-  useEffect(() => {
-    // ── Header Observer ──
-    const headerObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisibleHeader(true);
-          headerObserver.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (headerRef.current) headerObserver.observe(headerRef.current);
-
-    // ── Form Observer ──
-    const formObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisibleForm(true);
-          formObserver.disconnect();
-        }
-      },
-      { threshold: 0.08 }
-    );
-    if (formRef.current) formObserver.observe(formRef.current);
-
-    return () => {
-      headerObserver.disconnect();
-      formObserver.disconnect();
-    };
-  }, []);
-
   const inputStyle = {
     width: '100%',
-    padding: '12px 16px',
-    borderRadius: '8px',
+    padding: '10px 14px',
+    borderRadius: '6px',
     backgroundColor: 'rgba(255,255,255,0.05)',
     color: '#f5f5f5',
     border: '1px solid rgba(196,165,116,0.3)',
     outline: 'none',
-    fontSize: '0.95rem',
+    fontSize: '0.9rem',
     transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
     boxSizing: 'border-box',
   };
 
   const labelStyle = {
     display: 'block',
-    fontSize: '0.9rem',
-    fontWeight: 700,
-    marginBottom: '8px',
+    fontSize: '0.85rem',
+    fontWeight: 600,
+    marginBottom: '6px',
     color: '#c4a574',
   };
 
@@ -64,110 +27,58 @@ const ContactUs = () => {
   return (
     <section
       id="contact"
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-        overflow: 'hidden',
-        backgroundColor: '#1a1a1a',
-        /* ✅ FIX: push content below fixed navbar */
-        paddingTop: '110px',
-        paddingBottom: '64px',
-      }}
+      className="relative min-h-screen overflow-hidden bg-[#1a1a1a] pt-28 pb-12 sm:pt-32 sm:pb-16"
     >
       {/* Background */}
-      <div style={{ position: 'absolute', inset: 0 }}>
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: 'url(/media/background.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'brightness(0.3)',
-        }} />
+      <div className="absolute inset-0">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: 'url(/media/background.jpg)',
+            filter: 'brightness(0.3)',
+          }}
+        />
       </div>
 
-      <div style={{
-        maxWidth: '56rem',
-        margin: '0 auto',
-        padding: '0 1.5rem',
-        position: 'relative',
-        zIndex: 10,
-      }}>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
 
-        {/* ── Section Header ── */}
-        <div
-          ref={headerRef}
-          style={{
-            textAlign: 'center',
-            marginBottom: '3rem',
-            opacity: visibleHeader ? 1 : 0,
-            transform: visibleHeader ? 'translateY(0)' : 'translateY(-24px)',
-            transition: 'opacity 0.55s ease-out, transform 0.55s ease-out',
-            willChange: 'opacity, transform',
-          }}
-        >
-          <h1 style={{
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            marginBottom: '12px',
-            fontSize: 'clamp(2.2rem, 5vw, 4rem)',
-            color: '#f5f5f5',
-            letterSpacing: '-0.01em',
-            lineHeight: 1.1,
-          }}>
+        {/* Section Header */}
+        <div className="text-center mb-8 sm:mb-10 animate-fade-in-up">
+          <h1 className="font-bold uppercase mb-2 text-3xl sm:text-4xl md:text-5xl text-[#f5f5f5] leading-tight">
             BOOK YOUR<br />
-            <span style={{ color: '#c4a574' }}>APPOINTMENT</span>
+            <span className="text-[#c4a574]">APPOINTMENT</span>
           </h1>
-          <p style={{ fontSize: '1rem', color: 'rgba(224,224,224,0.7)' }}>
+          <p className="text-sm sm:text-base text-[#e0e0e0]/70">
             Schedule your visit today and experience luxury
           </p>
         </div>
 
-        {/* ── Booking Form ── */}
-        <div
-          ref={formRef}
-          style={{
-            borderRadius: '16px',
-            padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-            backgroundColor: 'rgba(0,0,0,0.4)',
-            border: '2px solid #c4a574',
-            opacity: visibleForm ? 1 : 0,
-            transform: visibleForm ? 'translateY(0) scale(1)' : 'translateY(32px) scale(0.97)',
-            transition: 'opacity 0.55s ease-out 0.1s, transform 0.55s ease-out 0.1s',
-            willChange: 'opacity, transform',
-          }}
+        {/* Booking Form */}
+        <div 
+          className="rounded-xl p-5 sm:p-6 md:p-8 bg-[#000]/40 border-2 border-[#c4a574]/60 backdrop-blur-sm animate-fade-in-up"
+          style={{ animationDelay: '100ms' }}
         >
           <form
             action="https://formsubmit.co/himanshukhanegwal@gmail.com"
             method="POST"
-            style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
+            className="flex flex-col gap-4 sm:gap-5"
           >
             <input type="text" name="_honey" style={{ display: 'none' }} />
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_subject" value="New Salon Appointment Booking!" />
 
             {/* Name Fields */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '1rem',
-            }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="firstName" style={labelStyle}>First Name</label>
                 <input
                   type="text"
                   id="firstName"
                   name="First_Name"
-                  placeholder="Enter your first name"
+                  placeholder="First name"
                   required
                   style={inputStyle}
-                  onFocus={e => {
-                    e.target.style.borderColor = '#c4a574';
-                    e.target.style.boxShadow = '0 0 0 3px rgba(196,165,116,0.2)';
-                  }}
-                  onBlur={e => {
-                    e.target.style.borderColor = 'rgba(196,165,116,0.3)';
-                    e.target.style.boxShadow = 'none';
-                  }}
+                  className="hover:border-[#c4a574] focus:border-[#c4a574] focus:ring-2 focus:ring-[#c4a574]/20"
                 />
               </div>
               <div>
@@ -176,74 +87,53 @@ const ContactUs = () => {
                   type="text"
                   id="lastName"
                   name="Last_Name"
-                  placeholder="Enter your last name"
+                  placeholder="Last name"
                   required
                   style={inputStyle}
-                  onFocus={e => {
-                    e.target.style.borderColor = '#c4a574';
-                    e.target.style.boxShadow = '0 0 0 3px rgba(196,165,116,0.2)';
-                  }}
-                  onBlur={e => {
-                    e.target.style.borderColor = 'rgba(196,165,116,0.3)';
-                    e.target.style.boxShadow = 'none';
-                  }}
+                  className="hover:border-[#c4a574] focus:border-[#c4a574] focus:ring-2 focus:ring-[#c4a574]/20"
                 />
               </div>
             </div>
 
-            {/* Phone */}
-            <div>
-              <label htmlFor="phone" style={labelStyle}>Phone Number</label>
-              <input
-                type="tel"
-                id="phone"
-                name="Phone_Number"
-                placeholder="Enter your phone number"
-                required
-                pattern="[0-9]{10}"
-                title="Please enter a valid 10-digit phone number"
-                style={inputStyle}
-                onFocus={e => {
-                  e.target.style.borderColor = '#c4a574';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(196,165,116,0.2)';
-                }}
-                onBlur={e => {
-                  e.target.style.borderColor = 'rgba(196,165,116,0.3)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-
-            {/* Location */}
-            <div>
-              <label htmlFor="location" style={labelStyle}>Preferred Location</label>
-              <select
-                id="location"
-                name="Preferred_Location"
-                required
-                style={{
-                  ...inputStyle,
-                  cursor: 'pointer',
-                  appearance: 'none',
-                  backgroundImage: dropdownArrow,
-                  backgroundPosition: 'right 0.75rem center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: '1.5em 1.5em',
-                  paddingRight: '2.5rem',
-                }}
-                onFocus={e => {
-                  e.target.style.borderColor = '#c4a574';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(196,165,116,0.2)';
-                }}
-                onBlur={e => {
-                  e.target.style.borderColor = 'rgba(196,165,116,0.3)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              >
-                <option value="" style={{ backgroundColor: '#000' }}>Select Location</option>
-                <option value="Kalkaji, New Delhi - 110019" style={{ backgroundColor: '#000' }}>Kalkaji, New Delhi</option>
-                <option value="Alaknanda, South Delhi - 110019" style={{ backgroundColor: '#000' }}>Alaknanda, South Delhi</option>
-              </select>
+            {/* Phone & Location */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="phone" style={labelStyle}>Phone Number</label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="Phone_Number"
+                  placeholder="10-digit number"
+                  required
+                  pattern="[0-9]{10}"
+                  title="Please enter a valid 10-digit phone number"
+                  style={inputStyle}
+                  className="hover:border-[#c4a574] focus:border-[#c4a574] focus:ring-2 focus:ring-[#c4a574]/20"
+                />
+              </div>
+              <div>
+                <label htmlFor="location" style={labelStyle}>Preferred Location</label>
+                <select
+                  id="location"
+                  name="Preferred_Location"
+                  required
+                  style={{
+                    ...inputStyle,
+                    cursor: 'pointer',
+                    appearance: 'none',
+                    backgroundImage: dropdownArrow,
+                    backgroundPosition: 'right 0.75rem center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '1.5em 1.5em',
+                    paddingRight: '2.5rem',
+                  }}
+                  className="hover:border-[#c4a574] focus:border-[#c4a574] focus:ring-2 focus:ring-[#c4a574]/20"
+                >
+                  <option value="" style={{ backgroundColor: '#000' }}>Select Location</option>
+                  <option value="Kalkaji, New Delhi - 110019" style={{ backgroundColor: '#000' }}>Kalkaji, New Delhi</option>
+                  <option value="Alaknanda, South Delhi - 110019" style={{ backgroundColor: '#000' }}>Alaknanda, South Delhi</option>
+                </select>
+              </div>
             </div>
 
             {/* Service */}
@@ -256,105 +146,60 @@ const ContactUs = () => {
                 placeholder="e.g., Hair Styling, Facial, Bridal Makeup"
                 required
                 style={inputStyle}
-                onFocus={e => {
-                  e.target.style.borderColor = '#c4a574';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(196,165,116,0.2)';
-                }}
-                onBlur={e => {
-                  e.target.style.borderColor = 'rgba(196,165,116,0.3)';
-                  e.target.style.boxShadow = 'none';
-                }}
+                className="hover:border-[#c4a574] focus:border-[#c4a574] focus:ring-2 focus:ring-[#c4a574]/20"
               />
             </div>
 
-            {/* Date */}
-            <div>
-              <label htmlFor="date" style={labelStyle}>Preferred Date</label>
-              <input
-                type="date"
-                id="date"
-                name="Preferred_Date"
-                required
-                min={new Date().toISOString().split('T')[0]}
-                style={{ ...inputStyle, colorScheme: 'dark', cursor: 'pointer' }}
-                onFocus={e => {
-                  e.target.style.borderColor = '#c4a574';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(196,165,116,0.2)';
-                }}
-                onBlur={e => {
-                  e.target.style.borderColor = 'rgba(196,165,116,0.3)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
-            </div>
-
-            {/* Time Slot */}
-            <div>
-              <label htmlFor="timeSlot" style={labelStyle}>Preferred Time Slot</label>
-              <select
-                id="timeSlot"
-                name="Preferred_Time_Slot"
-                required
-                style={{
-                  ...inputStyle,
-                  cursor: 'pointer',
-                  appearance: 'none',
-                  backgroundImage: dropdownArrow,
-                  backgroundPosition: 'right 0.75rem center',
-                  backgroundRepeat: 'no-repeat',
-                  backgroundSize: '1.5em 1.5em',
-                  paddingRight: '2.5rem',
-                }}
-                onFocus={e => {
-                  e.target.style.borderColor = '#c4a574';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(196,165,116,0.2)';
-                }}
-                onBlur={e => {
-                  e.target.style.borderColor = 'rgba(196,165,116,0.3)';
-                  e.target.style.boxShadow = 'none';
-                }}
-              >
-                <option value="" style={{ backgroundColor: '#000' }}>Select Time Slot</option>
-                {[
-                  '09:00 AM - 10:00 AM','10:00 AM - 11:00 AM','11:00 AM - 12:00 PM',
-                  '12:00 PM - 01:00 PM','01:00 PM - 02:00 PM','02:00 PM - 03:00 PM',
-                  '03:00 PM - 04:00 PM','04:00 PM - 05:00 PM','05:00 PM - 06:00 PM',
-                  '06:00 PM - 07:00 PM','07:00 PM - 08:00 PM',
-                ].map((slot) => (
-                  <option key={slot} value={slot} style={{ backgroundColor: '#000' }}>{slot}</option>
-                ))}
-              </select>
+            {/* Date & Time */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="date" style={labelStyle}>Preferred Date</label>
+                <input
+                  type="date"
+                  id="date"
+                  name="Preferred_Date"
+                  required
+                  min={new Date().toISOString().split('T')[0]}
+                  style={{ ...inputStyle, colorScheme: 'dark', cursor: 'pointer' }}
+                  className="hover:border-[#c4a574] focus:border-[#c4a574] focus:ring-2 focus:ring-[#c4a574]/20"
+                />
+              </div>
+              <div>
+                <label htmlFor="timeSlot" style={labelStyle}>Preferred Time Slot</label>
+                <select
+                  id="timeSlot"
+                  name="Preferred_Time_Slot"
+                  required
+                  style={{
+                    ...inputStyle,
+                    cursor: 'pointer',
+                    appearance: 'none',
+                    backgroundImage: dropdownArrow,
+                    backgroundPosition: 'right 0.75rem center',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: '1.5em 1.5em',
+                    paddingRight: '2.5rem',
+                  }}
+                  className="hover:border-[#c4a574] focus:border-[#c4a574] focus:ring-2 focus:ring-[#c4a574]/20"
+                >
+                  <option value="" style={{ backgroundColor: '#000' }}>Select Time</option>
+                  {[
+                    '09:00 AM - 10:00 AM','10:00 AM - 11:00 AM','11:00 AM - 12:00 PM',
+                    '12:00 PM - 01:00 PM','01:00 PM - 02:00 PM','02:00 PM - 03:00 PM',
+                    '03:00 PM - 04:00 PM','04:00 PM - 05:00 PM','05:00 PM - 06:00 PM',
+                    '06:00 PM - 07:00 PM','07:00 PM - 08:00 PM',
+                  ].map((slot) => (
+                    <option key={slot} value={slot} style={{ backgroundColor: '#000' }}>{slot}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {/* Submit Button */}
-            <div style={{ paddingTop: '1rem' }}>
+            <div className="pt-2">
               <button
                 type="submit"
-                style={{
-                  padding: '14px 48px',
-                  borderRadius: '8px',
-                  fontWeight: 700,
-                  fontSize: '1rem',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  border: '2px solid #c4a574',
-                  color: '#c4a574',
-                  transition: 'background-color 0.25s ease, color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease',
-                }}
-                onMouseEnter={e => {
-                  e.target.style.backgroundColor = '#c4a574';
-                  e.target.style.color = '#000';
-                  e.target.style.transform = 'scale(1.04)';
-                  e.target.style.boxShadow = '0 8px 24px rgba(196,165,116,0.4)';
-                }}
-                onMouseLeave={e => {
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.color = '#c4a574';
-                  e.target.style.transform = 'scale(1)';
-                  e.target.style.boxShadow = 'none';
-                }}
+                className="w-full sm:w-auto px-8 py-2.5 rounded-lg font-semibold text-sm uppercase tracking-wider cursor-pointer bg-transparent border-2 border-[#c4a574] text-[#c4a574] transition-all duration-300 hover:bg-[#c4a574] hover:text-[#000] hover:scale-105 hover:shadow-lg hover:shadow-[#c4a574]/40"
               >
                 Submit Booking
               </button>
@@ -362,6 +207,23 @@ const ContactUs = () => {
           </form>
         </div>
       </div>
+
+      <style>{`
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in-up {
+          animation: fade-in-up 0.6s ease-out forwards;
+          opacity: 0;
+        }
+      `}</style>
     </section>
   );
 };

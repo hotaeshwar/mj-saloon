@@ -1,77 +1,150 @@
 import React, { useState, useEffect } from 'react';
 
-const Navbar = () => {
+const Navbar = ({ onShowDetailedServices, onShowTeam, onShowLocation, showDetailedServices, showTeam, showLocation, onBackToHome }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeLink, setActiveLink] = useState('home');
+  const [isAboutDropdownOpen, setIsAboutDropdownOpen] = useState(false);
+  const [isServicesDropdownOpen, setIsServicesDropdownOpen] = useState(false);
+  const [isContactDropdownOpen, setIsContactDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
 
-      const sections = ['home', 'about', 'services', 'packages', 'work', 'contact'];
-      const scrollPosition = window.scrollY + 120;
+      if (!showDetailedServices && !showTeam && !showLocation) {
+        const sections = ['home', 'about', 'services', 'packages', 'work', 'contact'];
+        const scrollPosition = window.scrollY + 120;
 
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const offsetTop = element.offsetTop;
-          const offsetHeight = element.offsetHeight;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveLink(section);
-            // ✅ Update URL hash without jumping
-            if (window.location.hash !== `#${section}`) {
-              window.history.replaceState(null, '', `#${section}`);
+        for (const section of sections) {
+          const element = document.getElementById(section);
+          if (element) {
+            const offsetTop = element.offsetTop;
+            const offsetHeight = element.offsetHeight;
+            if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+              setActiveLink(section);
+              break;
             }
-            break;
           }
         }
       }
     };
 
-    // ✅ Set active from URL hash on load
-    const hash = window.location.hash.replace('#', '');
-    if (hash) {
-      setActiveLink(hash);
-      setTimeout(() => {
-        const el = document.getElementById(hash);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
-      setActiveLink('home');
-      window.history.replaceState(null, '', '#home');
-    }
+    window.addEventListener('scroll', () => {
+      setIsAboutDropdownOpen(false);
+      setIsServicesDropdownOpen(false);
+      setIsContactDropdownOpen(false);
+    });
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [showDetailedServices, showTeam, showLocation]);
 
-  const leftLinks = [
-    { name: 'About Us', href: '#about', id: 'about' },
-    { name: 'Services', href: '#services', id: 'services' },
-  ];
-
-  const rightLinks = [
-    { name: 'Packages', href: '#packages', id: 'packages' },
-    { name: 'Our Work', href: '#work', id: 'work' },
-  ];
-
-  const bookingLink = { name: 'Book Your Appointment', href: '#contact', id: 'contact' };
-  const allNavLinks = [...leftLinks, ...rightLinks, bookingLink];
-
-  const handleLinkClick = (id) => {
-    setActiveLink(id);
-    setIsMobileMenuOpen(false);
-    window.history.replaceState(null, '', `#${id}`);
+  const handleLinkClick = (id, e) => {
+    e.preventDefault();
+    
+    if (showDetailedServices || showTeam || showLocation) {
+      onBackToHome();
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 300);
+    } else {
+      setActiveLink(id);
+      setIsMobileMenuOpen(false);
+      setIsAboutDropdownOpen(false);
+      setIsServicesDropdownOpen(false);
+      setIsContactDropdownOpen(false);
+      
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   const handleHomeClick = (e) => {
     e.preventDefault();
     setActiveLink('home');
     setIsMobileMenuOpen(false);
-    window.history.replaceState(null, '', '#home');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsAboutDropdownOpen(false);
+    setIsServicesDropdownOpen(false);
+    setIsContactDropdownOpen(false);
+    
+    if (showDetailedServices || showTeam || showLocation) {
+      onBackToHome();
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
+
+  const handleViewAllServices = (e) => {
+    e.preventDefault();
+    onShowDetailedServices();
+    setIsMobileMenuOpen(false);
+    setIsServicesDropdownOpen(false);
+    setIsAboutDropdownOpen(false);
+    setIsContactDropdownOpen(false);
+  };
+
+  const handleTeamClick = (e) => {
+    e.preventDefault();
+    onShowTeam();
+    setIsMobileMenuOpen(false);
+    setIsAboutDropdownOpen(false);
+    setIsServicesDropdownOpen(false);
+    setIsContactDropdownOpen(false);
+  };
+
+  const handleLocationClick = (e) => {
+    e.preventDefault();
+    onShowLocation();
+    setIsMobileMenuOpen(false);
+    setIsAboutDropdownOpen(false);
+    setIsServicesDropdownOpen(false);
+    setIsContactDropdownOpen(false);
+  };
+
+  const toggleAboutDropdown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsAboutDropdownOpen(!isAboutDropdownOpen);
+    setIsServicesDropdownOpen(false);
+    setIsContactDropdownOpen(false);
+  };
+
+  const toggleServicesDropdown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsServicesDropdownOpen(!isServicesDropdownOpen);
+    setIsAboutDropdownOpen(false);
+    setIsContactDropdownOpen(false);
+  };
+
+  const toggleContactDropdown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsContactDropdownOpen(!isContactDropdownOpen);
+    setIsAboutDropdownOpen(false);
+    setIsServicesDropdownOpen(false);
+  };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.dropdown-container')) {
+        setIsAboutDropdownOpen(false);
+        setIsServicesDropdownOpen(false);
+        setIsContactDropdownOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-[#3e3631] shadow-lg' : 'bg-transparent'}`}>
@@ -80,16 +153,82 @@ const Navbar = () => {
 
           {/* Left Links */}
           <div className="hidden lg:flex items-center space-x-1 flex-1 justify-end pr-4">
-            {leftLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.href}
-                onClick={() => handleLinkClick(link.id)}
-                className={`text-white px-4 py-2 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === link.id ? 'bg-[#ad9b80]' : ''}`}
-              >
-                {link.name}
-              </a>
-            ))}
+            {/* About Us with Dropdown */}
+            <div className="relative dropdown-container">
+              <div className="flex items-center">
+                <a
+                  href="#about"
+                  onClick={(e) => handleLinkClick('about', e)}
+                  className={`text-white px-4 py-2 rounded-l-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'about' ? 'bg-[#ad9b80]' : ''}`}
+                >
+                  About Us
+                </a>
+                <button
+                  onClick={toggleAboutDropdown}
+                  className={`text-white px-2 py-2 rounded-r-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] border-l border-[#ad9b80]/30 ${activeLink === 'about' ? 'bg-[#ad9b80]' : ''}`}
+                  aria-label="Toggle dropdown"
+                >
+                  <svg className={`w-4 h-4 transition-transform duration-300 ${isAboutDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+              
+              {/* About Dropdown Menu */}
+              {isAboutDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-[#3e3631] rounded-lg shadow-xl border border-[#ad9b80]/20 overflow-hidden">
+                  <button
+                    onClick={handleTeamClick}
+                    className="w-full text-left block px-4 py-3 text-white text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80]"
+                  >
+                    Team
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Services with Dropdown */}
+            <div className="relative dropdown-container">
+              <div className="flex items-center">
+                <a
+                  href="#services"
+                  onClick={(e) => handleLinkClick('services', e)}
+                  className={`text-white px-4 py-2 rounded-l-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'services' ? 'bg-[#ad9b80]' : ''}`}
+                >
+                  Services
+                </a>
+                <button
+                  onClick={toggleServicesDropdown}
+                  className={`text-white px-2 py-2 rounded-r-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] border-l border-[#ad9b80]/30 ${activeLink === 'services' ? 'bg-[#ad9b80]' : ''}`}
+                  aria-label="Toggle dropdown"
+                >
+                  <svg className={`w-4 h-4 transition-transform duration-300 ${isServicesDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+              
+              {/* Services Dropdown Menu - Single "View All Services" link */}
+              {isServicesDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-56 bg-[#3e3631] rounded-lg shadow-xl border border-[#ad9b80]/20 overflow-hidden">
+                  <button
+                    onClick={handleViewAllServices}
+                    className="w-full text-left block px-4 py-3 text-white text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] border-t border-[#ad9b80]/30"
+                  >
+                    View All Services
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Packages */}
+            <a
+              href="#packages"
+              onClick={(e) => handleLinkClick('packages', e)}
+              className={`text-white px-4 py-2 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'packages' ? 'bg-[#ad9b80]' : ''}`}
+            >
+              Packages
+            </a>
           </div>
 
           {/* Center Logo */}
@@ -105,23 +244,56 @@ const Navbar = () => {
 
           {/* Right Links + Book Appointment */}
           <div className="hidden lg:flex items-center space-x-1 flex-1 justify-start pl-4">
-            {rightLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.href}
-                onClick={() => handleLinkClick(link.id)}
-                className={`text-white px-4 py-2 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === link.id ? 'bg-[#ad9b80]' : ''}`}
-              >
-                {link.name}
-              </a>
-            ))}
-
+            {/* Work */}
             <a
-              href={bookingLink.href}
-              onClick={() => handleLinkClick(bookingLink.id)}
-              className={`text-white px-4 py-1.5 rounded-lg text-sm font-medium border-2 border-[#ad9b80] transition-all duration-300 hover:bg-[#ad9b80] hover:border-[#ad9b80] ${activeLink === bookingLink.id ? 'bg-[#ad9b80] border-[#ad9b80]' : ''}`}
+              href="#work"
+              onClick={(e) => handleLinkClick('work', e)}
+              className={`text-white px-4 py-2 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'work' ? 'bg-[#ad9b80]' : ''}`}
             >
-              {bookingLink.name}
+              Work
+            </a>
+
+            {/* Contact with Dropdown */}
+            <div className="relative dropdown-container">
+              <div className="flex items-center">
+                <a
+                  href="#contact"
+                  onClick={(e) => handleLinkClick('contact', e)}
+                  className={`text-white px-4 py-2 rounded-l-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}
+                >
+                  Contact
+                </a>
+                <button
+                  onClick={toggleContactDropdown}
+                  className={`text-white px-2 py-2 rounded-r-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] border-l border-[#ad9b80]/30 ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}
+                  aria-label="Toggle dropdown"
+                >
+                  <svg className={`w-4 h-4 transition-transform duration-300 ${isContactDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+              </div>
+              
+              {/* Contact Dropdown Menu */}
+              {isContactDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-[#3e3631] rounded-lg shadow-xl border border-[#ad9b80]/20 overflow-hidden">
+                  <button
+                    onClick={handleLocationClick}
+                    className="w-full text-left block px-4 py-3 text-white text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80]"
+                  >
+                    Location
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Book Your Appointment */}
+            <a
+              href="#contact"
+              onClick={(e) => handleLinkClick('contact', e)}
+              className={`text-white px-4 py-1.5 rounded-lg text-sm font-medium border-2 border-[#ad9b80] transition-all duration-300 hover:bg-[#ad9b80] hover:border-[#ad9b80] ml-3 ${activeLink === 'contact' ? 'bg-[#ad9b80] border-[#ad9b80]' : ''}`}
+            >
+              Book Your Appointment
             </a>
           </div>
 
@@ -131,7 +303,6 @@ const Navbar = () => {
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="text-white p-2 rounded-lg hover:bg-[#ad9b80] transition-colors duration-300 focus:outline-none"
               aria-label="Toggle menu"
-              aria-expanded={isMobileMenuOpen}
             >
               {isMobileMenuOpen ? (
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -148,9 +319,8 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`lg:hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+      <div className={`lg:hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
         <div className="px-4 pt-2 pb-4 space-y-1 bg-[#3e3631] shadow-lg">
-          {/* Home link in mobile menu */}
           <a
             href="#home"
             onClick={handleHomeClick}
@@ -158,20 +328,69 @@ const Navbar = () => {
           >
             Home
           </a>
-          {allNavLinks.map((link) => (
-            <a
-              key={link.id}
-              href={link.href}
-              onClick={() => handleLinkClick(link.id)}
-              className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${
-                link.id === bookingLink.id
-                  ? `border-2 border-[#ad9b80] ${activeLink === link.id ? 'bg-[#ad9b80]' : ''}`
-                  : activeLink === link.id ? 'bg-[#ad9b80]' : ''
-              }`}
-            >
-              {link.name}
-            </a>
-          ))}
+          <a
+            href="#about"
+            onClick={(e) => handleLinkClick('about', e)}
+            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'about' ? 'bg-[#ad9b80]' : ''}`}
+          >
+            About Us
+          </a>
+          <button
+            onClick={handleTeamClick}
+            className="w-full text-left block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] pl-8"
+          >
+            └─ Team
+          </button>
+          <a
+            href="#services"
+            onClick={(e) => handleLinkClick('services', e)}
+            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'services' ? 'bg-[#ad9b80]' : ''}`}
+          >
+            Services
+          </a>
+          
+          {/* Mobile Services Submenu - Single "View All Services" link */}
+          <button
+            onClick={handleViewAllServices}
+            className="w-full text-left block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] pl-8 border-t border-[#ad9b80]/30 mt-1 pt-3"
+          >
+            └─ View All Services
+          </button>
+
+          <a
+            href="#packages"
+            onClick={(e) => handleLinkClick('packages', e)}
+            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'packages' ? 'bg-[#ad9b80]' : ''}`}
+          >
+            Packages
+          </a>
+          <a
+            href="#work"
+            onClick={(e) => handleLinkClick('work', e)}
+            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'work' ? 'bg-[#ad9b80]' : ''}`}
+          >
+            Work
+          </a>
+          <a
+            href="#contact"
+            onClick={(e) => handleLinkClick('contact', e)}
+            className={`block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}
+          >
+            Contact
+          </a>
+          <button
+            onClick={handleLocationClick}
+            className="w-full text-left block text-white px-4 py-3 rounded-lg text-base font-medium transition-colors duration-300 hover:bg-[#ad9b80] pl-8"
+          >
+            └─ Location
+          </button>
+          <a
+            href="#contact"
+            onClick={(e) => handleLinkClick('contact', e)}
+            className={`block text-white px-4 py-3 rounded-lg text-base font-medium border-2 border-[#ad9b80] transition-colors duration-300 hover:bg-[#ad9b80] ${activeLink === 'contact' ? 'bg-[#ad9b80]' : ''}`}
+          >
+            Book Your Appointment
+          </a>
         </div>
       </div>
     </nav>
