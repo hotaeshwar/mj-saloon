@@ -59,7 +59,7 @@ const ContactUs = () => {
           style={{ animationDelay: '100ms' }}
         >
           <form
-            action="https://formsubmit.co/himanshukhanegwal@gmail.com"
+            action="https://formsubmit.co/mjsalon573@gmail.com"
             method="POST"
             className="flex flex-col gap-4 sm:gap-5"
           >
