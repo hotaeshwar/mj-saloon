@@ -132,6 +132,7 @@ const ContactUs = () => {
                   <option value="" style={{ backgroundColor: '#000' }}>Select Location</option>
                   <option value="Kalkaji, New Delhi - 110019" style={{ backgroundColor: '#000' }}>Kalkaji, New Delhi</option>
                   <option value="Alaknanda, South Delhi - 110019" style={{ backgroundColor: '#000' }}>Alaknanda, South Delhi</option>
+                  <option value="Abhoar, Punjab" style={{ backgroundColor: '#000' }}>Abhoar, Punjab</option>
                 </select>
               </div>
             </div>
