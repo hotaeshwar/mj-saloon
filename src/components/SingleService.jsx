@@ -52,38 +52,7 @@ const SingleService = () => {
         'Extension refills and removal'
       ]
     },
-    'pedicure': {
-      title: 'Pedicure',
-      subtitle: 'Pamper Your Feet',
-      image: '/media/pedicure.jpg',
-      metaDescription: 'Luxurious pedicure services at MJ Salon, Alaknanda, Kalkaji & Abohar. Relaxing spa treatments with exfoliation, therapeutic massage, and beautiful polish for soft, groomed feet.',
-      intro: 'Treat yourself to luxurious <strong>pedicure services</strong> at <strong>MJ Salon by Mohit & Jatin</strong> with locations in <strong>Alaknanda (South Delhi)</strong>, <strong>Kalkaji (New Delhi)</strong> and <strong>Abohar (Punjab)</strong>. Our comprehensive foot care treatments combine relaxation with beauty.',
-      description: 'Deep exfoliation, therapeutic massage, and expert grooming for soft, smooth, beautifully polished feet.',
-      features: [
-        'Classic pedicure with polish',
-        'Spa pedicure with aromatherapy',
-        'Gel polish application',
-        'Foot massage and exfoliation',
-        'Cuticle care and nail shaping',
-        'Paraffin wax treatment'
-      ]
-    },
-    'facial': {
-      title: 'Facial Treatment',
-      subtitle: 'Radiant, Glowing Skin',
-      image: '/media/facial.jpg',
-      metaDescription: 'Rejuvenating facial treatments at MJ Salon, Alaknanda, Kalkaji & Abohar. Customized skincare using premium products for deep cleansing, hydration, brightening, and anti-aging results.',
-      intro: 'Achieve radiant, glowing skin with rejuvenating <strong>facial treatments</strong> at <strong>MJ Salon by Mohit & Jatin</strong> with locations in <strong>Alaknanda (South Delhi)</strong>, <strong>Kalkaji (New Delhi)</strong> and <strong>Abohar (Punjab)</strong>. Our expert estheticians provide <strong>customized skincare solutions</strong> using premium products.',
-      description: 'Deep cleansing, hydration, brightening, and anti-aging treatments addressing specific skin concerns for healthier, youthful-looking skin.',
-      features: [
-        'Deep cleansing facials',
-        'Hydrating treatments with masks',
-        'Anti-aging facials',
-        'Brightening facials',
-        'Acne treatment facials',
-        'Personalized skin analysis'
-      ]
-    },
+
     'hydrafacial': {
       title: 'HydraFacial',
       subtitle: 'Next-Gen Skin Resurfacing',
@@ -106,8 +75,7 @@ const SingleService = () => {
       title: 'Korean Facial',
       subtitle: 'K-Beauty Glow Ritual',
       image: '/media/koreanfacial.jpg',
-      objectPosition: 'object-[center_30%]',
-      objectFit: 'object-contain',
+      objectPosition: '60% 80%',
       metaDescription: 'Authentic Korean facial treatment at MJ Salon, Alaknanda, Kalkaji & Abohar. K-beauty inspired multi-step skincare ritual with glass skin glow, deep hydration, and advanced brightening techniques for flawless skin.',
       intro: 'Unlock the secret to <strong>glass skin</strong> with our authentic <strong>Korean facial treatment</strong> at <strong>MJ Salon by Mohit & Jatin</strong> with locations in <strong>Alaknanda (South Delhi)</strong>, <strong>Kalkaji (New Delhi)</strong> and <strong>Abohar (Punjab)</strong>. Inspired by the globally celebrated <strong>K-beauty skincare philosophy</strong>, this multi-step ritual focuses on deep nourishment, hydration, and a luminous, porcelain-like complexion.',
       description: 'Our Korean Facial is a luxurious multi-layered skincare ritual drawing from K-beauty traditions. Using sheet masks, essences, ampoules, and brightening serums, this treatment intensely hydrates, firms, and illuminates the skin. Perfect for achieving the sought-after dewy, glass skin look — without any harsh procedures.',
@@ -238,7 +206,8 @@ const SingleService = () => {
                         <img
                           src={service.image}
                           alt={`${service.title} at MJ Salon`}
-                          className={`w-full h-full hover:scale-105 transition-transform duration-500 ${service.objectFit || 'object-cover'} ${service.objectPosition || 'object-center'}`}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                          style={{ objectPosition: service.objectPosition || 'center' }}
                           loading="lazy"
                         />
                       </div>
