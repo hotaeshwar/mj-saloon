@@ -10,8 +10,8 @@ export default function Services() {
     { id: 1, title: 'HAIR TREATMENT', image: '/media/hairtreatment.jpg' },
     { id: 2, title: 'MAKEUP',         image: '/media/makeup.jpg'        },
     { id: 3, title: 'NAIL EXTENSION', image: '/media/nailextension.jpg' },
-    { id: 4, title: 'PEDICURE',       image: '/media/pedicure.jpg'      },
-    { id: 5, title: 'FACIAL',         image: '/media/facial.jpg'        },
+    { id: 4, title: 'FACIAL',         image: '/media/facial.jpg'        },
+    { id: 5, title: 'HAIR PATCH',     image: '/media/hairpatch.jpg'     },
   ];
 
   useEffect(() => {
