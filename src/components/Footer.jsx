@@ -128,14 +128,14 @@ const Footer = () => {
                 className="flex items-center gap-2 text-sm text-white/60 hover:text-[#c4a574] transition-all duration-300 group"
               >
                 <Phone className="w-4 h-4 text-[#c4a574] group-hover:scale-110 transition-transform" />
-                <span>+91 85578 54703</span>
+                <span>+91 7837370549</span>
               </a>
               <a
                 href="tel:+917508373378"
                 className="flex items-center gap-2 text-sm text-white/60 hover:text-[#c4a574] transition-all duration-300 group"
               >
                 <Phone className="w-4 h-4 text-[#c4a574] group-hover:scale-110 transition-transform" />
-                <span>+91 75083 73378</span>
+                <span>+91 9717974604</span>
               </a>
               
               {/* Operating Hours */}

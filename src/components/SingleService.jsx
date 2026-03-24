@@ -83,6 +83,80 @@ const SingleService = () => {
         'Acne treatment facials',
         'Personalized skin analysis'
       ]
+    },
+    'hydrafacial': {
+      title: 'HydraFacial',
+      subtitle: 'Next-Gen Skin Resurfacing',
+      image: '/media/hydrafacial.jpg',
+      metaDescription: 'Advanced HydraFacial treatment at MJ Salon, Alaknanda, Kalkaji & Abohar. Multi-step skin resurfacing with deep cleansing, exfoliation, extraction, hydration, and antioxidant protection for instantly glowing skin.',
+      intro: 'Experience the gold standard in skin rejuvenation with <strong>HydraFacial treatments</strong> at <strong>MJ Salon by Mohit & Jatin</strong> with locations in <strong>Alaknanda (South Delhi)</strong>, <strong>Kalkaji (New Delhi)</strong> and <strong>Abohar (Punjab)</strong>. This clinically proven, <strong>non-invasive skin resurfacing treatment</strong> delivers instant, visible results with zero downtime — suitable for all skin types.',
+      description: 'HydraFacial is a patented, multi-step facial treatment that combines cleansing, exfoliation, painless extractions, and deep hydration with nourishing serums in a single session. It targets fine lines, clogged pores, uneven skin tone, oiliness, and dullness — leaving skin visibly brighter, plumper, and healthier after just one visit.',
+      features: [
+        'Deep cleansing & vortex exfoliation',
+        'Painless blackhead & pore extraction',
+        'Intense hydration with hyaluronic acid',
+        'Antioxidant & peptide infusion',
+        'Brightening & even skin tone treatment',
+        'Anti-aging serum application',
+        'Suitable for sensitive & acne-prone skin',
+        'Zero downtime — results in 30 minutes'
+      ]
+    },
+    'korean-facial': {
+      title: 'Korean Facial',
+      subtitle: 'K-Beauty Glow Ritual',
+      image: '/media/koreanfacial.jpg',
+      objectPosition: 'object-[center_30%]',
+      objectFit: 'object-contain',
+      metaDescription: 'Authentic Korean facial treatment at MJ Salon, Alaknanda, Kalkaji & Abohar. K-beauty inspired multi-step skincare ritual with glass skin glow, deep hydration, and advanced brightening techniques for flawless skin.',
+      intro: 'Unlock the secret to <strong>glass skin</strong> with our authentic <strong>Korean facial treatment</strong> at <strong>MJ Salon by Mohit & Jatin</strong> with locations in <strong>Alaknanda (South Delhi)</strong>, <strong>Kalkaji (New Delhi)</strong> and <strong>Abohar (Punjab)</strong>. Inspired by the globally celebrated <strong>K-beauty skincare philosophy</strong>, this multi-step ritual focuses on deep nourishment, hydration, and a luminous, porcelain-like complexion.',
+      description: 'Our Korean Facial is a luxurious multi-layered skincare ritual drawing from K-beauty traditions. Using sheet masks, essences, ampoules, and brightening serums, this treatment intensely hydrates, firms, and illuminates the skin. Perfect for achieving the sought-after dewy, glass skin look — without any harsh procedures.',
+      features: [
+        'Korean double-cleansing method',
+        'Exfoliation with enzyme peeling',
+        'Sheet mask with brightening actives',
+        'Essence & ampoule layering technique',
+        'Gua sha facial massage for lifting',
+        'Glass skin hydration boost',
+        'Pore tightening & firming treatment',
+        'Suitable for all skin tones'
+      ]
+    },
+    'hair-extension': {
+      title: 'Hair Extension',
+      subtitle: 'Instant Length & Volume',
+      image: '/media/hairextension.jpg',
+      metaDescription: 'Professional hair extension services at MJ Salon, Alaknanda, Kalkaji & Abohar. Clip-in, tape-in, fusion, and weft hair extensions for instant length, volume, and natural-looking results.',
+      intro: 'Add instant length, volume, and dimension with <strong>professional hair extensions</strong> at <strong>MJ Salon by Mohit & Jatin</strong> with locations in <strong>Alaknanda (South Delhi)</strong>, <strong>Kalkaji (New Delhi)</strong> and <strong>Abohar (Punjab)</strong>. Our trained extension specialists use <strong>100% natural human hair</strong> for seamlessly blended, <strong>damage-free results</strong> that look and feel completely natural.',
+      description: 'Whether you want extra length for a special occasion or permanent volume to transform your everyday look, our hair extension services are tailored to your hair type and lifestyle. We offer a range of application methods using ethically sourced, high-quality human hair that matches your natural color and texture perfectly.',
+      features: [
+        'Clip-in extensions for temporary use',
+        'Tape-in extensions — seamless & flat',
+        'Fusion / keratin bond extensions',
+        'Weft & micro-link extensions',
+        'Color matching & blending',
+        'Extension care & maintenance advice',
+        'Removal & re-application service',
+        '100% natural Remy human hair used'
+      ]
+    },
+    'hair-patch': {
+      title: 'Hair Patch',
+      subtitle: 'Natural-Looking Hair Replacement',
+      image: '/media/hairpatch.jpg',
+      metaDescription: 'Expert hair patch and non-surgical hair replacement at MJ Salon, Alaknanda, Kalkaji & Abohar. Customized toupee, hair system, and hair patch solutions for men and women with hair loss, thinning hair, or baldness.',
+      intro: 'Regain your confidence with our <strong>hair patch and non-surgical hair replacement solutions</strong> at <strong>MJ Salon by Mohit & Jatin</strong> with locations in <strong>Alaknanda (South Delhi)</strong>, <strong>Kalkaji (New Delhi)</strong> and <strong>Abohar (Punjab)</strong>. Designed for men and women experiencing <strong>hair loss, thinning hair, or baldness</strong>, our custom hair systems offer a completely natural look and feel — with zero surgery, zero pain.',
+      description: 'Our hair patch service provides a permanent, non-surgical solution for hair loss using high-quality human or synthetic hair systems that are customized to match your scalp tone, hair color, texture, and density. The result is an undetectable, full head of hair that you can style, wash, and live with naturally — boosting your appearance and self-esteem from day one.',
+      features: [
+        'Custom-fitted human hair patches',
+        'Synthetic & blend hair systems',
+        'Full scalp & partial coverage options',
+        'Natural color & texture matching',
+        'Secure bonding & attachment methods',
+        'Hair patch styling & cutting',
+        'Regular maintenance & re-bonding',
+        'Private, confidential consultation'
+      ]
     }
   };
 
@@ -164,7 +238,7 @@ const SingleService = () => {
                         <img
                           src={service.image}
                           alt={`${service.title} at MJ Salon`}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                          className={`w-full h-full hover:scale-105 transition-transform duration-500 ${service.objectFit || 'object-cover'} ${service.objectPosition || 'object-center'}`}
                           loading="lazy"
                         />
                       </div>
